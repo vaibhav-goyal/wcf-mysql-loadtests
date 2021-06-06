@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace EmployeeManagement
 {
@@ -17,6 +18,12 @@ namespace EmployeeManagement
             RequestFormat = WebMessageFormat.Json, 
             ResponseFormat = WebMessageFormat.Json)]
         List<GetHiresByYearResult> GetHiresByYear();
+
+        [OperationContract]
+        [WebGet(UriTemplate = "api/v2/GetHiresByYear",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json)]
+        Task<List<GetHiresByYearResult>> GetHiresByYearV2();
     }
 
     [DataContract]

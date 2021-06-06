@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Threading.Tasks;
 
 namespace EmployeeManagement
 {
@@ -13,7 +14,8 @@ namespace EmployeeManagement
         private const string _query = 
 @"select year(hire_date) as Year, 
 count(*) as TotalHires 
-from employees.employees where @p0 = @p0
+from employees.employees 
+where @p0 = @p0
 group by year(hire_date);";
 
         public Employee()
@@ -43,7 +45,31 @@ group by year(hire_date);";
                     }
                 }
             }
+            return result;
+        }
 
+        public async Task<List<GetHiresByYearResult>> GetHiresByYearV2()
+        {
+            var result = new List<GetHiresByYearResult>();
+            using (var con = new MySqlConnection(_connectionString))
+            {
+                await con.OpenAsync();
+                using (var cmd = new MySqlCommand(_query, con))
+                {
+                    cmd.EnableCaching = false;
+                    cmd.Parameters.AddWithValue("p0", GetRandomNumber());
+                    using (var rdr = await cmd.ExecuteReaderAsync())
+                    {
+                        if (rdr.HasRows)
+                        {
+                            while (await rdr.ReadAsync())
+                            {
+                                result.Add(new GetHiresByYearResult { Year = rdr.GetInt32(0), TotalHires = rdr.GetInt64(1) });
+                            }
+                        }
+                    }
+                }
+            }
             return result;
         }
 
