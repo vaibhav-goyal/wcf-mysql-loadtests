@@ -1,10 +1,10 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MySqlConnector;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 
-namespace EmployeeManagement
+namespace EmployeeManagement_OSS
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Employee" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select Employee.svc or Employee.svc.cs at the Solution Explorer and start debugging.
@@ -54,7 +54,7 @@ group by year(hire_date);";
             {
                 await con.OpenAsync();
                 using (var cmd = new MySqlCommand(_query, con))
-                {                 
+                {
                     cmd.Parameters.AddWithValue("p0", GetRandomNumber());
                     using (var rdr = await cmd.ExecuteReaderAsync())
                     {
