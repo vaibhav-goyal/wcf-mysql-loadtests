@@ -60,7 +60,7 @@ group by year(hire_date);";
                     {
                         if (rdr.HasRows)
                         {
-                            while (await rdr.ReadAsync())
+                            while (rdr.Read())
                             {
                                 result.Add(new GetHiresByYearResult { Year = rdr.GetInt32(0), TotalHires = rdr.GetInt64(1) });
                             }
